@@ -1,0 +1,6 @@
+endee
+langchain-groq
+langchain-core
+tavily-python
+python-dotenv
+spacy
