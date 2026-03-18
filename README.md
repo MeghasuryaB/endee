@@ -1,860 +1,139 @@
-# 🔍 AutoResearch Agent
+<p align="center">
+  <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="docs/assets/logo-dark.svg">
+      <source media="(prefers-color-scheme: light)" srcset="docs/assets/logo-light.svg">
+      <img height="100" alt="Endee" src="docs/assets/logo-dark.svg">
+  </picture>
+</p>
 
-[![Python](https://img.shields.io/badge/Python-3.8%2B-blue)](https://www.python.org/)
-[![Streamlit](https://img.shields.io/badge/Streamlit-1.28%2B-red)](https://streamlit.io/)
-[![Endee](https://img.shields.io/badge/Endee-0.1.19-green)](https://github.com/endee-io/endee)
-[![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
-[![Status](https://img.shields.io/badge/Status-Active-brightgreen)](https://github.com)
+<p align="center">
+    <b>High-performance open-source vector database for AI search, RAG, semantic search, and hybrid retrieval.</b>
+</p>
 
-> **Intelligent Multi-Agent Research System Powered by Endee Vector Database**
+<p align="center">
+    <a href="./docs/getting-started.md"><img src="https://img.shields.io/badge/Quick_Start-Local_Setup-success?style=flat-square" alt="Quick Start"></a>
+    <a href="https://docs.endee.io/quick-start"><img src="https://img.shields.io/badge/Docs-Quick_Start-success?style=flat-square" alt="Docs"></a>
+    <a href="https://github.com/endee-io/endee/blob/master/LICENSE"><img src="https://img.shields.io/github/license/endee-io/endee?style=flat-square" alt="License"></a>
+    <a href="https://discord.gg/5HFGqDZQE3"><img src="https://img.shields.io/badge/Discord-Join_Chat-5865F2?logo=discord&style=flat-square" alt="Discord"></a>
+    <a href="https://endee.io/"><img src="https://img.shields.io/badge/Website-Endee-111111?style=flat-square" alt="Website"></a>
+    <!-- <a href="https://endee.io/benchmarks"><img src="https://img.shields.io/badge/Benchmarks-Coming_Soon-1F8B4C?style=flat-square" alt="Benchmarks"></a> -->
+    <!-- <a href="https://endee.io/cloud"><img src="https://img.shields.io/badge/Cloud-Coming_Soon-2496ED?style=flat-square" alt="Cloud"></a> -->
+</p>
 
-AutoResearch Agent automatically researches any topic by breaking down complex questions, searching the web for relevant information, storing findings in a vector database, analyzing content semantically, and generating comprehensive research reports with verified citations.
+<p align="center">
+<strong><a href="./docs/getting-started.md">Quick Start</a> • <a href="#why-endee">Why Endee</a> • <a href="#use-cases">Use Cases</a> • <a href="#features">Features</a> • <a href="#api-and-clients">API and Clients</a> • <a href="#docs-and-links">Docs</a> • <a href="#community-and-contact">Contact</a></strong>
+</p>
 
----
+# Endee: Open-Source Vector Database for AI Search
 
-## 📋 Table of Contents
+**Endee** is a high-performance open-source vector database built for AI search and retrieval workloads. It is designed for teams building **RAG pipelines**, **semantic search**, **hybrid search**, recommendation systems, and filtered vector retrieval APIs that need production-oriented performance and control.
 
-- [✨ Features](#-features)
-- [🎯 How It Works](#-how-it-works)
-- [🔍 What is Endee?](#-what-is-endee)
-- [🚀 Quick Start](#-quick-start)
-- [📁 Project Structure](#-project-structure)
-- [💻 Installation & Setup](#-installation--setup)
-- [📖 Usage](#-usage)
-- [🔌 API Methods](#-api-methods)
-- [📊 Performance](#-performance)
-- [🎓 Learn More](#-learn-more)
-- [❓ FAQ](#-faq)
-- [🤝 Contributing](#-contributing)
+Endee combines vector search with filtering, sparse retrieval support, backup workflows, and deployment flexibility across local builds and Docker-based environments. The project is implemented in C++ and optimized for modern CPU targets, including AVX2, AVX512, NEON, and SVE2.
 
----
+If you want the fastest path to evaluate Endee locally, start with the [Getting Started guide](./docs/getting-started.md) or the hosted docs at [docs.endee.io](https://docs.endee.io/quick-start).
 
-## ✨ Features
+## Why Endee
 
-### Core Capabilities
+- Built as a dedicated vector database for AI applications, search systems, and retrieval-heavy workloads.
+- Supports dense vector retrieval plus sparse search capabilities for hybrid search use cases.
+- Includes payload filtering for metadata-aware retrieval and application-specific query logic.
+- Ships with operational features already documented in this repo, including backup flows and runtime observability.
+- Offers flexible deployment paths: local scripts, manual builds, Docker images, and prebuilt registry images.
 
-| Feature                          | Description                                                        |
-| -------------------------------- | ------------------------------------------------------------------ |
-| 🔎 **Semantic Search**           | Endee-powered vector search understands meaning, not just keywords |
-| 🎯 **RAG Pattern**               | Retrieved context grounds LLM for accurate, verifiable responses   |
-| 🤖 **Multi-Agent Orchestration** | 4 specialized agents work together via LangGraph                   |
-| 🌐 **Real-time Web Search**      | Tavily API for fresh, current information                          |
-| 📚 **Persistent Knowledge**      | Endee stores findings for reuse across queries                     |
-| 📖 **Source Attribution**        | Every claim verified with full citations                           |
-| ⚡ **Fast Inference**            | Groq LLM processes 100+ tokens/second                              |
-| 🏗️ **Production Architecture**   | Professional-grade code with error handling & tests                |
+## Getting Started
 
-### Advanced Features
+The full installation, build, Docker, runtime, and authentication instructions are in [docs/getting-started.md](./docs/getting-started.md).
 
-- ✅ Intelligent question decomposition
-- ✅ Named entity extraction (spaCy)
-- ✅ Context-aware analysis
-- ✅ Structured professional reports
-- ✅ Real-time progress tracking
-- ✅ Extensible agent system
-
----
-
-## 🎯 How It Works
-
-### System Architecture
-
-┌─────────────────────────────────────────────────────────┐
-│ USER INPUT │
-│ "What are AI trends in healthcare?" │
-└────────────────────┬────────────────────────────────────┘
-│
-▼
-┌─────────────────────────────────────────────────────────┐
-│ PLANNER AGENT (LLM) │
-│ Breaks down complex question into sub-questions │
-│ ✓ What are latest AI breakthroughs? │
-│ ✓ Which companies lead in healthcare AI? │
-│ ✓ What practical applications exist? │
-└────────────────────┬────────────────────────────────────┘
-│
-▼
-┌─────────────────────────────────────────────────────────┐
-│ SEARCHER AGENT (Web + Endee) │
-│ • Searches web for each sub-question │
-│ • Converts articles to 384-dim vectors │
-│ • Stores in Endee with metadata │
-│ ✓ Found 9 articles from 3 searches │
-└────────────────────┬────────────────────────────────────┘
-│
-▼
-┌─────────────────────────────────────────────────────────┐
-│ ANALYZER AGENT (Endee Search) │
-│ • Queries Endee semantically │
-│ • Retrieves 8 most relevant documents │
-│ • Extracts entities, summarizes content │
-│ ✓ Endee found: "AI", "healthcare", "ML" │
-└────────────────────┬────────────────────────────────────┘
-│
-▼
-┌─────────────────────────────────────────────────────────┐
-│ REPORTER AGENT (LLM + RAG) │
-│ • Uses retrieved context from Endee │
-│ • Generates comprehensive report │
-│ • Adds citations for all claims │
-│ ✓ Professional research report ready │
-└────────────────────┬────────────────────────────────────┘
-│
-▼
-┌─────────────────────────────────────────────────────────┐
-│ FINAL RESEARCH REPORT │
-│ • Executive Summary │
-│ • Key Findings │
-│ • Detailed Analysis │
-│ • Source Citations │
-└─────────────────────────────────────────────────────────┘
-
-### Data Flow Example
-
-User Query: "What is quantum computing?"
-↓
-Planner: Breaks into 3 focused questions
-↓
-Searcher: Finds 9 articles, converts to vectors, stores in Endee
-↓
-Analyzer: Searches Endee semantically, retrieves 8 relevant docs
-↓
-Reporter: Generates report using Endee-retrieved context
-↓
-Output: Professional report with 9 verified sources
-
----
-
-## 🔍 What is Endee?
-
-### Simple Explanation
-
-**Endee is a Vector Database** that stores text as mathematical vectors and retrieves documents based on semantic meaning—not just keyword matching.
-
-### How Traditional Search Works (Without Endee)
-
-Query: "Find AI information"
-↓
-Search for exact keyword "AI"
-↓
-Results: Only pages with exact word "AI"
-↓
-Problem: Misses "machine learning", "neural networks", "deep learning"
-
-### How Semantic Search Works (With Endee)
-
-Query: "Find AI information"
-↓
-Convert to vector (384 numbers): [0.23, -0.15, 0.67, ...]
-↓
-Find similar vectors in Endee
-↓
-Results: "AI", "machine learning", "deep learning", "neural networks"
-↓
-Benefit: Understands MEANING, not just keywords
-
-### The Technical Process
-
-#### Step 1: Convert Text to Vector
-
-```python
-Text: "Artificial intelligence is transforming healthcare"
-         ↓
-Embedding Model (384-dim)
-         ↓
-Vector: [0.23, -0.15, 0.67, 0.42, ..., 0.51]
-         ↓
-Store in Endee
-```
-
-#### Step 2: Store in Endee
-
-Endee Database stores:
-├─ Original text
-├─ Vector (384 numbers)
-├─ Metadata (source, date, etc.)
-└─ Ready for semantic search
-
-#### Step 3: Search Semantically
-
-When searching for "machine learning in medicine":
-
-1. Convert query to vector
-2. Find similar vectors in Endee
-3. Return semantically related documents
-
-### Why Endee is Better
-
-| Aspect              | Keyword Search       | Endee (Vector DB)        |
-| ------------------- | -------------------- | ------------------------ |
-| **Understands**     | Exact words only     | Semantic meaning         |
-| **Search Quality**  | Limited              | Better understanding     |
-| **Processing**      | Analyzes all results | Only relevant docs       |
-| **Performance**     | Slow on large data   | Fast (milliseconds)      |
-| **Knowledge Reuse** | None                 | Reuses previous findings |
-
-**Real Example:**
-
-- Query: "Quantum computing breakthroughs"
-- ❌ Without Endee: Returns "The quantum (physics) of energy"
-- ✅ With Endee: Returns actual quantum computing articles
-
----
-
-## 🚀 Quick Start
-
-### Prerequisites
-
-✓ Python 3.8 or higher
-✓ API Keys:
-
-- GROQ_API_KEY (free from console.groq.com)
-- TAVILY_API_KEY (free from tavily.com)
-
-### Installation (5 minutes)
-
-#### 1. Clone Repository
+Fastest local path:
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/endee.git
-cd endee/examples/auto-research-agent
+chmod +x ./install.sh ./run.sh
+./install.sh --release --avx2
+./run.sh
 ```
 
-#### 2. Create Virtual Environment
-
-```bash
-# Windows
-python -m venv .venv
-.venv\Scripts\activate
+The server listens on port `8080`. For detailed setup paths, supported operating systems, CPU optimization flags, Docker usage, and authentication examples, use:
 
-# Mac/Linux
-python3 -m venv .venv
-source .venv/bin/activate
-```
+- [Getting Started](./docs/getting-started.md)
+- [Hosted Quick Start Docs](https://docs.endee.io/quick-start)
 
-#### 3. Install Dependencies
+## Use Cases
 
-```bash
-pip install -r requirements.txt
-```
-
-#### 4. Download spaCy Model
+### RAG and AI Retrieval
 
-```bash
-python -m spacy download en_core_web_sm
-```
+Use Endee as the retrieval layer for question answering, chat assistants, copilots, and other RAG applications that need fast vector search with metadata-aware filtering.
 
-This model enables Named Entity Recognition (extracting people, organizations, dates).
+### Agentic AI and AI Agent Memory
 
-#### 5. Setup Environment Variables
+Use Endee as the long-term memory and context retrieval layer for AI agents built with frameworks like LangChain, CrewAI, AutoGen, and LlamaIndex. Store and retrieve past observations, tool outputs, conversation history, and domain knowledge mid-execution with low-latency filtered vector search, so your autonomous agents get the right context without stalling their reasoning loop.
 
-```bash
-cp .env.example .env
-```
+### Semantic Search
 
-Edit `.env` with your API keys:
-
-GROQ_API_KEY=your_actual_groq_api_key_here
-TAVILY_API_KEY=your_actual_tavily_api_key_here
+Build semantic search experiences for documents, products, support content, and knowledge bases using vector similarity search instead of exact keyword-only matching.
 
-**Get API Keys (Free):**
+### Hybrid Search
 
-**Groq API:**
+Combine dense retrieval, sparse vectors, and filtering to improve relevance for search workflows where both semantic understanding and term-level precision matter.
 
-- Visit: https://console.groq.com
-- Sign up (free)
-- Navigate to API Keys
-- Copy your key
-- Free tier: Unlimited requests (rate limited)
+### Recommendations and Matching
 
-**Tavily API:**
+Support recommendation, similarity matching, and nearest-neighbor retrieval workflows across text, embeddings, and other high-dimensional representations.
 
-- Visit: https://tavily.com
-- Sign up (free)
-- Go to API section
-- Copy your key
-- Free tier: 1000 API calls per month
+## Features
 
-#### 6. Run Application
+- **Vector search** for AI retrieval and semantic similarity workloads.
+- **Hybrid retrieval support** with sparse vector capabilities documented in [docs/sparse.md](./docs/sparse.md).
+- **Payload filtering** for structured retrieval logic documented in [docs/filter.md](./docs/filter.md).
+- **Backup APIs and flows** documented in [docs/backup-system.md](./docs/backup-system.md).
+- **Operational logging and instrumentation** documented in [docs/logs.md](./docs/logs.md) and [docs/mdbx-instrumentation.md](./docs/mdbx-instrumentation.md).
+- **CPU-targeted builds** for AVX2, AVX512, NEON, and SVE2 deployments.
+- **Docker deployment options** for local and server environments.
 
-```bash
-python -m streamlit run ui/app.py
-```
+## API and Clients
 
-Opens at: `http://localhost:8501`
+Endee exposes an HTTP API for managing indexes and serving retrieval workloads. The current repo documentation and examples focus on running the server directly and calling its API endpoints.
 
----
+Current developer entry points:
 
-## 📁 Project Structure
+- [Getting Started](./docs/getting-started.md) for local build and run flows
+- [Hosted Docs](https://docs.endee.io/quick-start) for product documentation
+- [Release Notes 1.0.0](https://github.com/endee-io/endee/releases/tag/1.0.0) for recent platform changes
 
-auto-research-agent/
-│
-├── agents/ # AI Agent Implementations
-│ ├── planner.py # Break questions into sub-questions
-│ ├── searcher.py # Search web + Store in Endee
-│ ├── analyzer.py # Search Endee + Analyze
-│ └── reporter.py # Generate final report
-│
-├── graph/ # LangGraph Orchestration
-│ ├── state.py # State management
-│ └── workflow.py # Agent coordination
-│
-├── ui/ # User Interface
-│ └── app.py # Streamlit application
-│
-├── utils/ # Helper Functions
-│ ├── config.py # Load configuration
-│ ├── logger.py # Logging setup
-│ └── init.py
-│
-├── tests/ # Test Suite
-│ ├── test_agents.py # Agent tests
-│ ├── test_workflow.py # Workflow tests
-│ └── init.py
-│
-├── requirements.txt # Python dependencies
-├── .env.example # Environment template
-├── .gitignore # Git ignore file
-└── README.md # This file
+## Docs and Links
 
----
+- [Getting Started](./docs/getting-started.md)
+- [Hosted Documentation](https://docs.endee.io/quick-start)
+- [Release Notes](https://github.com/endee-io/endee/releases/tag/1.0.0)
+- [Sparse Search](./docs/sparse.md)
+- [Filtering](./docs/filter.md)
+- [Backups](./docs/backup-system.md)
 
-## 💻 Installation & Setup
+## Community and Contact
 
-### Step-by-Step Setup
+- Join the community on [Discord](https://discord.gg/5HFGqDZQE3)
+- Visit the website at [endee.io](https://endee.io/)
+- For trademark or branding permissions, contact [enterprise@endee.io](mailto:enterprise@endee.io)
 
-#### Step 1: Clone & Navigate
+## Contributing
 
-```bash
-git clone https://github.com/YOUR_USERNAME/endee.git
-cd endee/examples/auto-research-agent
-```
+We welcome contributions from the community to help make vector search faster and more accessible for everyone.
 
-#### Step 2: Virtual Environment
+- Submit pull requests for fixes, features, and improvements
+- Report bugs or performance issues through GitHub issues
+- Propose enhancements for search quality, performance, and deployment workflows
 
-```bash
-python -m venv .venv
-source .venv/bin/activate  # Mac/Linux
-# or
-.venv\Scripts\activate     # Windows
-```
+## License
 
-#### Step 3: Install Dependencies
+Endee is open source software licensed under the **Apache License 2.0**. See the [LICENSE](./LICENSE) file for full terms.
 
-```bash
-pip install -r requirements.txt
-```
+## Trademark and Branding
 
-**What gets installed:**
+“Endee” and the Endee logo are trademarks of Endee Labs.
 
-✓ endee==0.1.19 Vector database for semantic search
-✓ langchain-groq Groq LLM integration
-✓ langchain-core LangChain core utilities
-✓ tavily-python Web search API
-✓ python-dotenv Environment management
-✓ spacy==3.7.0 NLP library (entity extraction)
-✓ streamlit==1.28.0 Web UI framework
+The Apache License 2.0 does not grant permission to use the Endee name, logos, or branding in a way that suggests endorsement or affiliation.
 
-#### Step 4: Download spaCy Model
+If you offer a hosted or managed service based on this software, you must use your own branding and avoid implying it is an official Endee service.
 
-```bash
-python -m spacy download en_core_web_sm
-```
+## Third-Party Software
 
-**What it does:** Enables Named Entity Recognition (NER)
-
-- Extracts people, organizations, locations
-- Identifies dates and products
-- Improves analysis accuracy
-
-#### Step 5: Environment Variables
-
-```bash
-# Create .env file
-cp .env.example .env
-
-# Edit .env
-nano .env  # or use your editor
-
-# Add these:
-GROQ_API_KEY=your_key_here
-TAVILY_API_KEY=your_key_here
-```
-
-#### Step 6: Verify Installation
-
-```bash
-# Test Python imports
-python -c "from endee import Endee; print('✓ Endee installed')"
-
-# Test spaCy
-python -m spacy download en_core_web_sm
-
-# Run app
-python -m streamlit run ui/app.py
-```
-
-#### Step 7: Run Application
-
-```bash
-streamlit run ui/app.py
-```
-
-Access at: **http://localhost:8501**
-
----
-
-## 📖 Usage
-
-### Web Interface (Recommended)
-
-#### 1. Start Application
-
-```bash
-python -m streamlit run ui/app.py
-```
-
-#### 2. Enter Research Question
-
-Example: "What are the latest AI trends in 2026?"
-
-#### 3. Click "🚀 Start Research"
-
-The system will:
-
-- ✓ Break question into sub-questions
-- ✓ Search web for articles
-- ✓ Store articles in Endee
-- ✓ Search Endee semantically
-- ✓ Analyze findings
-- ✓ Generate report
-
-#### 4. View Results
-
-✓ Executive Summary
-✓ Key Findings
-✓ Detailed Analysis
-✓ Important Entities
-✓ Source Citations
-
-### Python API Usage
-
-```python
-from graph.workflow import create_research_graph
-
-# Create research workflow
-graph = create_research_graph()
-
-# Run research on a topic
-result = graph.invoke({
-    "query": "What is blockchain technology?"
-})
-
-# Get results
-print("Sub-questions:", result["sub_questions"])
-print("Analysis:", result["analysis"])
-print("Report:", result["final_report"])
-```
-
-### Advanced Usage
-
-```python
-import json
-
-# Multiple topics
-topics = [
-    "AI in healthcare",
-    "Quantum computing",
-    "Blockchain finance"
-]
-
-for topic in topics:
-    result = graph.invoke({"query": topic})
-
-    # Save results
-    with open(f"{topic}.json", "w") as f:
-        json.dump(result, f, indent=2)
-```
-
----
-
-## 🔌 API Methods
-
-### Endee Storage (Searcher Agent)
-
-**Location:** `agents/searcher.py`
-
-```python
-from endee import Endee
-
-client = Endee()
-
-# Store document in Endee
-client.insert(
-    document="The text content you want to store",
-    metadata={
-        "title": "Document Title",
-        "url": "https://example.com/article",
-        "source": "web_search",
-        "date": "2026-03-17"
-    }
-)
-```
-
-**Parameters:**
-
-| Parameter  | Type | Description                          |
-| ---------- | ---- | ------------------------------------ |
-| `document` | str  | Text to convert to vector and store  |
-| `metadata` | dict | Additional info (title, URL, source) |
-
-**What Happens:**
-
-1. Text converted to 384-dimensional vector
-2. Vector stored with original text
-3. Metadata indexed for filtering
-4. Ready for semantic search
-
----
-
-### Endee Retrieval (Analyzer Agent)
-
-**Location:** `agents/analyzer.py`
-
-```python
-from endee import Endee
-
-client = Endee()
-
-# Search semantically in Endee
-results = client.search(
-    query="machine learning trends",
-    limit=8
-)
-
-# Process results
-for result in results:
-    document = result["document"]      # Original text
-    metadata = result["metadata"]      # Source info
-    score = result["score"]            # Similarity 0-1
-
-    print(f"Score: {score:.2f}")
-    print(f"URL: {metadata['url']}")
-    print(f"Content: {document[:100]}...")
-```
-
-**Return Values:**
-
-| Field      | Description                                 |
-| ---------- | ------------------------------------------- |
-| `document` | Original text stored                        |
-| `metadata` | Source information                          |
-| `score`    | Similarity score (0-1, 1.0 = perfect match) |
-
-**Example Output:**
-
-Score: 0.92
-URL: https://techcrunch.com/article
-Content: Machine learning trends in 2026 include...
-
----
-
-## 📊 Performance
-
-### Speed Metrics
-
-| Metric             | Value  | Notes                       |
-| ------------------ | ------ | --------------------------- |
-| **End-to-End**     | 10-30s | Depends on query complexity |
-| **Planner Agent**  | 2-3s   | Decompose question          |
-| **Searcher Agent** | 3-5s   | Find and store articles     |
-| **Analyzer Agent** | 5-8s   | Search Endee + analyze      |
-| **Reporter Agent** | 3-5s   | Generate report             |
-| **Endee Search**   | 150ms  | Semantic retrieval          |
-
-### Quality Metrics
-
-| Metric                 | Value       | Details                      |
-| ---------------------- | ----------- | ---------------------------- |
-| **Documents Searched** | 9 per query | 3 sub-questions × 3 articles |
-| **Endee Retrieval**    | 8 documents | Top 8 most relevant          |
-| **Source Citation**    | 100%        | All claims verified          |
-| **Report Accuracy**    | High        | Grounded in real sources     |
-
-### Cost Analysis
-
-**Using Free Tiers:**
-
-Groq API: $0.0020 per query (free tier: unlimited)
-Tavily API: $0.0025 per query (free tier: 1000/month)
-Endee: $0.0000 per query (free tier)
-────────────────────────────
-Total: ~$0.005 per query
-Monthly: ~$0.15 at 30 queries
-
----
-
-## 📸 Example Output
-
-### Sample Research Report
-
-**Input Query:**
-
-"What are the latest AI trends in 2026?"
-
-**Output (Abbreviated):**
-
-═══════════════════════════════════════════════════════════════
-AI TRENDS 2026: COMPREHENSIVE RESEARCH REPORT
-═══════════════════════════════════════════════════════════════
-EXECUTIVE SUMMARY
-─────────────────────────────────────────────────────────────
-Artificial Intelligence reached unprecedented maturity in 2026,
-with enterprise adoption exceeding 75% of Fortune 500 companies.
-KEY FINDINGS
-─────────────────────────────────────────────────────────────
-• Multimodal AI systems becoming standard
-• AI regulation frameworks implemented in 45+ countries
-• Enterprise AI adoption exceeds 75%
-• AI-generated content: $2.4 trillion economic value
-• Energy-efficient AI models gaining traction
-DETAILED ANALYSIS
-─────────────────────────────────────────────────────────────
-[Comprehensive breakdown with citations]
-COMPANIES LEADING
-OpenAI, DeepMind, Anthropic, Google, Meta, Microsoft...
-SOURCES & CITATIONS
-[1] OpenAI - "GPT-5 Architecture"
-[2] Nature - "AI Trends 2026 Review"
-[3] McKinsey - "AI Global Report"
-... [9 total citations]
-═══════════════════════════════════════════════════════════════
-
----
-
-## 🎓 Learn More
-
-### Official Documentation
-
-| Resource      | Link                              | Purpose              |
-| ------------- | --------------------------------- | -------------------- |
-| **Endee**     | https://github.com/endee-io/endee | Vector database docs |
-| **LangChain** | https://langchain.com             | LLM framework        |
-| **Groq**      | https://groq.com                  | Fast LLM inference   |
-| **Tavily**    | https://tavily.com                | Web search API       |
-| **spaCy**     | https://spacy.io                  | NLP library          |
-| **Streamlit** | https://streamlit.io              | Web UI framework     |
-
-### Related Concepts
-
-- [Vector Embeddings](https://en.wikipedia.org/wiki/Word_embedding)
-- [RAG Pattern](https://huggingface.co/blog/rag)
-- [Multi-Agent Systems](https://arxiv.org/abs/2308.00352)
-- [Semantic Search](https://www.deepset.ai/semantic-search)
-
----
-
-## ❓ FAQ
-
-### About Endee
-
-**Q: What exactly is Endee?**
-
-A: Endee is a vector database that stores text as mathematical
-vectors. It enables semantic search—finding documents by meaning,
-not just keywords.
-
-**Q: Why not just use Google Search?**
-
-A: Google returns links; Endee understands meaning. Plus, Endee
-stores results persistently for reuse across searches.
-
-**Q: Does Endee require internet?**
-
-A: Endee Cloud requires internet. Local installations are available.
-
-**Q: Can I reuse findings across searches?**
-
-A: Yes! Endee persists, so findings from previous searches can be
-searched again in future queries.
-
-### About the Project
-
-**Q: How is this different from ChatGPT?**
-
-A: ChatGPT uses training data only. This system searches the web
-in real-time and uses RAG for verifiable, sourced answers.
-
-**Q: Can I use my own LLM?**
-
-A: Yes. The code uses LangChain abstractions, so you can swap
-Groq for OpenAI, Anthropic, or others.
-
-**Q: What if API keys are invalid?**
-
-A: App shows clear error messages. Check .env file and verify
-API key validity on their dashboards.
-
-**Q: How many documents can Endee store?**
-
-A: Millions. Endee is optimized for scale.
-
-**Q: Can I customize the report format?**
-
-A: Yes. Modify the reporter.py prompt to change structure, tone,
-or format.
-
-### Troubleshooting
-
-**Q: "No module named 'endee'"**
-
-A: Install with: pip install -r requirements.txt
-
-**Q: "Streamlit app won't start"**
-
-A: Check if port 8501 is available. Use:
-streamlit run ui/app.py --server.port 8502
-
-**Q: "spaCy model not found"**
-
-A: Download with: python -m spacy download en_core_web_sm
-
-**Q: "API rate limits exceeded"**
-
-A: Free tiers have limits. Groq: ~10k requests/min,
-Tavily: 1000/month
-
----
-
-## 🤝 Contributing
-
-### How to Contribute
-
-1. **Fork** the repository
-2. **Create** feature branch: `git checkout -b feature/your-feature`
-3. **Make** changes and test thoroughly
-4. **Commit**: `git commit -m "Add: Your feature description"`
-5. **Push**: `git push origin feature/your-feature`
-6. **Submit** Pull Request
-
-### Areas for Contribution
-
-- 🐛 Bug fixes
-- ✨ New features
-- 📚 Documentation improvements
-- ✅ Test cases
-- 🎨 UI/UX improvements
-- ⚡ Performance optimizations
-
-### Development Guidelines
-
-✓ Write clean, readable code
-✓ Add type hints
-✓ Include docstrings
-✓ Write tests
-✓ Follow project structure
-✓ Document changes
-
----
-
-## 📊 Project Statistics
-
-| Metric             | Value         |
-| ------------------ | ------------- |
-| **Code Lines**     | 2,000+        |
-| **Test Coverage**  | 85%+          |
-| **Documentation**  | Comprehensive |
-| **Python Version** | 3.8+          |
-| **Dependencies**   | 8 (minimal)   |
-| **Status**         | Active        |
-
----
-
-## 📄 License
-
-MIT License - See LICENSE file for details
-
----
-
-## 📧 Support
-
-### Getting Help
-
-- 📖 Check [FAQ](#-faq) section
-- 🐛 [Create an issue](https://github.com/endee-io/endee/issues)
-- 💬 [Start discussion](https://github.com/endee-io/endee/discussions)
-
-### Report Issues
-
-Include:
-
-- Error message (full traceback)
-- Steps to reproduce
-- Expected vs actual behavior
-- `python --version`
-- Operating system
-
----
-
-## 🎉 Summary
-
-**AutoResearch Agent demonstrates:**
-
-✅ Endee vector database integration (semantic search + storage)
-✅ RAG pattern implementation (grounded LLM responses)
-✅ Multi-agent architecture (4 specialized agents)
-✅ Production-grade code (error handling, tests, logging)
-✅ Professional documentation (clear and comprehensive)
-✅ Real-world problem solving (automated research)
-
-**This project showcases skills valuable in professional AI development.**
-
----
-
-## ✅ Endee Integration Checklist
-
-Before submission, verify:
-
-- ✅ Endee imported in searcher.py
-- ✅ Endee imported in analyzer.py
-- ✅ `endee.insert()` stores documents with vectors
-- ✅ `endee.search()` retrieves semantically similar documents
-- ✅ README explains Endee usage clearly
-- ✅ Code pushed to forked repo
-- ✅ Project in `/examples/auto-research-agent/`
-- ✅ Endee in requirements.txt
-- ✅ App runs and uses Endee
-- ✅ RAG pattern fully implemented
-
----
-
-## 🙏 Acknowledgments
-
-Built with:
-
-- [Endee](https://github.com/endee-io/endee) - Vector Database
-- [LangChain](https://langchain.com) - LLM Framework
-- [Groq](https://groq.com) - Fast LLM Inference
-- [Tavily](https://tavily.com) - Web Search API
-- [Streamlit](https://streamlit.io) - Web UI
-
----
-
-## 📞 Stay Updated
-
-⭐ Star this repository to stay updated
-📢 Share with others
-🤝 Contribute improvements
-💬 Provide feedback
-
----
-
-<div align="center">
-
-**Built with ❤️ using Endee Vector Database**
-
-[⭐ Star on GitHub](https://github.com/endee-io/endee) | [🐛 Report Issue](https://github.com/endee-io/endee/issues) | [💬 Discuss](https://github.com/endee-io/endee/discussions)
-
-**Version:** 1.0.0 | **Last Updated:** March 17, 2026 | **Status:** ✅ Active
-
-</div>
+This project includes or depends on third-party software components licensed under their respective open-source licenses. Use of those components is governed by their own license terms.
