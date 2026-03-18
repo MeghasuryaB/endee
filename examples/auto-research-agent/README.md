@@ -59,55 +59,102 @@ AutoResearch Agent automatically researches any topic by breaking down complex q
 
 ### System Architecture
 
-┌─────────────────────────────────────────────────────────┐
-│ USER INPUT │
-│ "What are AI trends in healthcare?" │
-└────────────────────┬────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────┐
+│ USER QUERY │
+│ "What are AI trends?" │
+└──────────────────┬───────────────────────────────────────────┘
 │
 ▼
-┌─────────────────────────────────────────────────────────┐
+┌──────────────────────────────────────────────────────────────┐
 │ PLANNER AGENT (LLM) │
-│ Breaks down complex question into sub-questions │
-│ ✓ What are latest AI breakthroughs? │
-│ ✓ Which companies lead in healthcare AI? │
-│ ✓ What practical applications exist? │
-└────────────────────┬────────────────────────────────────┘
+│ Decomposes question into sub-questions │
+│ │
+│ Input: "What are AI trends in healthcare?" │
+│ Output: 1) Latest AI breakthroughs? │
+│ 2) Leading companies? │
+│ 3) Practical applications? │
+└──────────────────┬───────────────────────────────────────────┘
 │
 ▼
-┌─────────────────────────────────────────────────────────┐
-│ SEARCHER AGENT (Web + Endee) │
+┌──────────────────────────────────────────────────────────────┐
+│ SEARCHER AGENT + Tavily Web Search │
+│ Finds articles, converts to vectors, stores │
+│ │
 │ • Searches web for each sub-question │
-│ • Converts articles to 384-dim vectors │
+│ • Converts articles to embeddings │
 │ • Stores in Endee with metadata │
-│ ✓ Found 9 articles from 3 searches │
-└────────────────────┬────────────────────────────────────┘
+│ ✓ Found: 9 articles │
+└──────────────────┬───────────────────────────────────────────┘
 │
 ▼
-┌─────────────────────────────────────────────────────────┐
-│ ANALYZER AGENT (Endee Search) │
+┌──────────────────┐
+│ ENDEE STORAGE │
+│ Vector Database │
+│ (9 documents) │
+│ 384-dim vectors │
+└────────┬─────────┘
+│
+▼
+┌──────────────────────────────────────────────────────────────┐
+│ ANALYZER AGENT + Endee Semantic Search │
+│ Retrieves relevant docs, extracts entities, analyzes │
+│ │
 │ • Queries Endee semantically │
-│ • Retrieves 8 most relevant documents │
-│ • Extracts entities, summarizes content │
-│ ✓ Endee found: "AI", "healthcare", "ML" │
-└────────────────────┬────────────────────────────────────┘
+│ • Retrieves top 8 documents │
+│ • Extracts entities (companies, people, dates) │
+│ ✓ Analysis: "AI", "Healthcare", "ML" │
+└──────────────────┬───────────────────────────────────────────┘
 │
 ▼
-┌─────────────────────────────────────────────────────────┐
-│ REPORTER AGENT (LLM + RAG) │
-│ • Uses retrieved context from Endee │
-│ • Generates comprehensive report │
-│ • Adds citations for all claims │
-│ ✓ Professional research report ready │
-└────────────────────┬────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────┐
+│ REPORTER AGENT + LLM (Groq Llama 3) │
+│ Uses Endee-retrieved context for RAG generation │
+│ │
+│ RAG Pattern: │
+│ • Retrieval: Get 8 docs from Endee │
+│ • Augmented: Add context to prompt │
+│ • Generation: LLM creates report │
+│ ✓ Output: Professional report with citations │
+└──────────────────┬───────────────────────────────────────────┘
 │
 ▼
-┌─────────────────────────────────────────────────────────┐
+┌──────────────────────────────────────────────────────────────┐
 │ FINAL RESEARCH REPORT │
+│ │
 │ • Executive Summary │
 │ • Key Findings │
 │ • Detailed Analysis │
-│ • Source Citations │
-└─────────────────────────────────────────────────────────┘
+│ • Important Entities │
+│ • Source Citations (9 references) │
+└──────────────────────────────────────────────────────────────┘
+
+### Data Flow in RAG Pattern
+
+Query: "What are AI trends in healthcare?"
+│
+├─ Planner → 3 sub-questions
+│
+├─ Searcher → Finds 9 articles
+│ │
+│ ▼
+│ ┌─────────────────┐
+│ │ ENDEE STORAGE │
+│ │ (Vector DB) │
+│ └────────┬────────┘
+│ │
+│ Analyzer queries it → Retrieves 8 docs
+│ │
+│ ▼
+│ [Most Relevant Content]
+│ │
+└────────────────────────────────┼─────┐
+│ │
+(RAG Context) │
+▼ ▼
+Reporter: "Write report using this context"
+│
+▼
+Final Report with Citations
 
 ### Data Flow Example
 
